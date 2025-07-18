@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>AR Navigasi RS</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- A-Frame & AR.js -->
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/ar.js@3.4.2/aframe/build/aframe-ar.min.js"></script>
+
+    <!-- Komponen Debug Kamera -->
+    <script>
+      AFRAME.registerComponent("debug-camera", {
+        init: function () {
+          console.log("✅ debug-camera attached!");
+        },
+        tick: function () {
+          const cam = this.el.object3D;
+        }
+      });
+    </script>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div id="info">
+      <strong>Lokasi Anda</strong><br />
+      Lat: <span id="lat">-</span><br />
+      Lng: <span id="lng">-</span>
+    </div>
+
+    <a-scene
+      embedded
+      vr-mode-ui="enabled: false"
+      renderer="logarithmicDepthBuffer: true;"
+      arjs="sourceType: webcam; gpsMinAccuracy: 100;"
+    >
+      <!-- Kamera AR dengan GPS -->
+      <a-camera gps-camera rotation-reader debug-camera></a-camera>
+
+      <!-- Panah GLB mengarah ke lokasi -->
+      <a-entity
+        id="arrow"
+        gltf-model="arrow.glb"
+        scale="1 1 1"
+        position="0 0 -5"
+        rotation="0 0 0"
+      ></a-entity>
+    </a-scene>
+
+    <!-- Script utama -->
+    <script src="script.js"></script>
+  </body>
+</html>
