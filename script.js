@@ -21,9 +21,10 @@ const tujuan = {
     return (brng + 360) % 360;
   }
   
-  function updateLocation(lat, lng) {
+  function updateLocation(lat, lng, alt) {
     document.getElementById("lat").textContent = lat.toFixed(6);
     document.getElementById("lng").textContent = lng.toFixed(6);
+    document.getElementById("alt").textContent = alt.toFixed(6);
   
     const bearing = getBearing(lat, lng, tujuan.lat, tujuan.lng);
     arrow.setAttribute("rotation", `0 ${bearing} 0`);
@@ -36,7 +37,8 @@ const tujuan = {
         (pos) => {
           const lat = pos.coords.latitude;
           const lng = pos.coords.longitude;
-          updateLocation(lat, lng);
+          const alt = pos.coords.altitude || 0; // Ambil ketinggian jika tersedia
+          updateLocation(lat, lng, alt);
         },
         (err) => {
           console.error("Gagal mendapatkan lokasi:", err);
