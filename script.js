@@ -1,12 +1,11 @@
 // Koordinat tujuan: Ruang Prabu Siliwangi
 const tujuan = {
     lat: -6.730179,
-    lng: 108.554110
+    lng: 108.554110,
   };
   
   const arrow = document.getElementById("arrow");
   
-  // Fungsi bantu bearing
   const toRadians = (deg) => deg * (Math.PI / 180);
   const toDegrees = (rad) => rad * (180 / Math.PI);
   
@@ -24,33 +23,20 @@ const tujuan = {
   function updateLocation(lat, lng, alt) {
     document.getElementById("lat").textContent = lat.toFixed(6);
     document.getElementById("lng").textContent = lng.toFixed(6);
-    document.getElementById("alt").textContent = alt.toFixed(6);
+    document.getElementById("alt").textContent = alt.toFixed(2);
   
     const bearing = getBearing(lat, lng, tujuan.lat, tujuan.lng);
-    arrow.setAttribute("rotation", `0 ${bearing} 0`);
+    if (arrow) {
+      arrow.setAttribute("rotation", `0 ${bearing} 0`);
+    }
     console.log(`Bearing ke tujuan: ${bearing}`);
   }
   
-  window.addEventListener("load", () => {
-    if ("geolocation" in navigator) {
-      navigator.geolocation.watchPosition(
-        (pos) => {
-          const lat = pos.coords.latitude;
-          const lng = pos.coords.longitude;
-          const alt = pos.coords.altitude || 0; // Ambil ketinggian jika tersedia
-          updateLocation(lat, lng, alt);
-        },
-        (err) => {
-          console.error("Gagal mendapatkan lokasi:", err);
-        },
-        {
-          enableHighAccuracy: true,
-          maximumAge: 0,
-          timeout: 5000
-        }
-      );
-    } else {
-      alert("Geolocation tidak didukung browser ini.");
-    }
+  window.addEventListener("gps-camera-update-position", (e) => {
+    const lat = e.detail.position.latitude;
+    const lng = e.detail.position.longitude;
+    const alt = e.detail.position.altitude || 0;
+  
+    updateLocation(lat, lng, alt);
   });
   
